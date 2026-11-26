@@ -641,6 +641,21 @@
     { passive: false }
   );
 
+  function scrollCaretIntoView() {
+    const { y } = caretPosition();
+    const style = getComputedStyle(noteEl);
+    const lineHeight = parseFloat(style.lineHeight) || 0;
+    const padding = parseFloat(style.paddingBottom) || 0;
+    const top = noteEl.scrollTop;
+    const bottom = top + noteEl.clientHeight - padding;
+    if (y < top) {
+      noteEl.scrollTop = y;
+    } else if (y + lineHeight > bottom) {
+      noteEl.scrollTop = y + lineHeight - noteEl.clientHeight + padding;
+    }
+    syncScroll();
+  }
+
   function replaceRange(from, to, text, selStart, selEnd) {
     noteEl.setSelectionRange(from, to);
     if (!document.execCommand("insertText", false, text)) {
@@ -649,6 +664,7 @@
       noteEl.dispatchEvent(new Event("input"));
     }
     noteEl.setSelectionRange(selStart, selEnd);
+    scrollCaretIntoView();
   }
 
   function insertText(text, caretOffset = text.length) {
