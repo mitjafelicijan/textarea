@@ -75,6 +75,7 @@
   let imageDbPromise = null;
   let saveTimer = 0;
   let cachedLanguages = null;
+  let loadedId = null;
   const imageUrls = new Map();
 
   function newId() {
@@ -108,6 +109,7 @@
   }
 
   function saveState() {
+    rememberCursor();
     clearTimeout(saveTimer);
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -123,6 +125,20 @@
 
   function currentBuffer() {
     return state.buffers.find((b) => b.id === state.activeId);
+  }
+
+  function rememberCursor() {
+    const buffer = state.buffers.find((b) => b.id === loadedId);
+    if (!buffer) return;
+    buffer.cursor = { start: noteEl.selectionStart, end: noteEl.selectionEnd, scroll: noteEl.scrollTop };
+  }
+
+  function restoreCursor() {
+    const cursor = currentBuffer().cursor ?? {};
+    const length = noteEl.value.length;
+    noteEl.setSelectionRange(Math.min(cursor.start ?? 0, length), Math.min(cursor.end ?? 0, length));
+    noteEl.scrollTop = cursor.scroll ?? 0;
+    syncScroll();
   }
 
   function applyFontSize() {
@@ -197,6 +213,7 @@
   }
 
   function loadEditor() {
+    loadedId = currentBuffer().id;
     noteEl.value = currentBuffer().text;
     applyFontSize();
     applyWrap();
@@ -204,6 +221,7 @@
     deselectImage();
     renderImages();
     render();
+    restoreCursor();
   }
 
   function switchBuffer(id) {

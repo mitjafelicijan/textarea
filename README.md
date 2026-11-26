@@ -10,6 +10,7 @@ Open index.html, or serve the folder: `python3 -m http.server`
 - Syntax highlighting (highlight.js, vendored, common languages)
 - Floating images (paste, drag, resize), stored in IndexedDB
 - Per-buffer font size and line wrap
+- Per-buffer cursor selection and scroll position restored when you return to a buffer
 
 ## Shortcuts
 - `Alt+N` new buffer
@@ -24,6 +25,6 @@ Open index.html, or serve the folder: `python3 -m http.server`
 - `Alt+/` help
 
 ## Storage
-- localStorage key `notes`: all buffers, settings, help-seen flag.
+- localStorage key `notes`: all buffers (with cursor and scroll position), settings, help-seen flag.
 - IndexedDB `notes-images`: pasted image blobs (>1600px downscaled to WebP).
 - Clearing site data deletes everything.
