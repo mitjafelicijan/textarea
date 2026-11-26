@@ -28,7 +28,7 @@ jobs:
       - name: Prepare production build
         run: |
           mkdir public
-          cp -r index.html css js vendor public/
+          cp -r index.html favicon.gif css js vendor public/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
