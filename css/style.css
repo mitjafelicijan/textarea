@@ -49,6 +49,12 @@ body {
   word-break: normal;
   overflow-x: hidden;
   overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.editor textarea::-webkit-scrollbar,
+.editor pre::-webkit-scrollbar {
+  display: none;
 }
 
 .editor.nowrap textarea {
@@ -105,9 +111,13 @@ body {
 .language-label {
   position: absolute;
   top: 12px;
-  right: 24px;
+  right: 12px;
   z-index: 2;
+  padding: 4px;
+  border-radius: 4px;
+  background: var(--bg);
   font-size: 13px;
+  line-height: 1;
   color: var(--muted);
   pointer-events: none;
 }
