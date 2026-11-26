@@ -855,7 +855,7 @@
         newBuffer();
         return;
       }
-      if (event.code === "KeyP") {
+      if (event.code === "KeyB") {
         event.preventDefault();
         togglePanel("buffers");
         return;
