@@ -725,21 +725,6 @@
     );
   }
 
-  function toggleCase() {
-    const { selectionStart: start, selectionEnd: end, value } = noteEl;
-    if (start === end) return;
-    const swapped = [...value.slice(start, end)]
-      .map((c) => {
-        const upper = c.toUpperCase();
-        const lower = c.toLowerCase();
-        if (c === lower && upper.length === 1) return upper;
-        if (c === upper && lower.length === 1) return lower;
-        return c;
-      })
-      .join("");
-    replaceRange(start, end, swapped, start, start + swapped.length);
-  }
-
   function commentLines() {
     const style = COMMENT_STYLES[currentBuffer().language];
     if (!style) return;
@@ -785,6 +770,19 @@
     );
   }
 
+  let freshBufferKey = false;
+
+  document.addEventListener("keyup", (event) => {
+    if (event.code !== "KeyN" || !freshBufferKey) return;
+    freshBufferKey = false;
+    const cleaned = noteEl.value.replace(/^[~˜]+/, "");
+    if (cleaned !== noteEl.value) {
+      noteEl.value = cleaned;
+      noteEl.dispatchEvent(new Event("input"));
+    }
+  });
+
+
   noteEl.addEventListener("keydown", (event) => {
     if (selectedImageId) {
       if (event.key === "Backspace" || event.key === "Delete") {
@@ -800,11 +798,6 @@
       if (event.key === "ArrowUp" || event.key === "ArrowDown") {
         event.preventDefault();
         moveLines(event.key === "ArrowUp" ? -1 : 1);
-        return;
-      }
-      if (event.code === "Backquote") {
-        event.preventDefault();
-        toggleCase();
         return;
       }
     }
@@ -852,6 +845,7 @@
         event.preventDefault();
         panelMode = null;
         panelEl.hidden = true;
+        freshBufferKey = true;
         newBuffer();
         return;
       }
@@ -884,7 +878,7 @@
       event.preventDefault();
       chooseEntry(listIndex);
     } else if (
-      event.key === "Delete" &&
+      (event.key === "Delete" || (event.key === "Backspace" && event.shiftKey)) &&
       panelMode === "buffers" &&
       filterEl.selectionStart === filterEl.value.length
     ) {
@@ -892,6 +886,12 @@
       deleteHighlighted();
     }
   });
+
+  if (/Macintosh|Mac OS X|iPhone|iPad/.test(navigator.userAgent)) {
+    for (const term of helpEl.querySelectorAll("dt")) {
+      term.textContent = term.textContent.replace(/\bAlt\b/g, "Option");
+    }
+  }
 
   helpEl.addEventListener("click", (event) => {
     if (event.target === helpEl) toggleHelp();

@@ -14,13 +14,12 @@ Open index.html, or serve the folder: `python3 -m http.server`
 
 ## Shortcuts
 - `Alt+N` new buffer
-- `Alt+B` buffer list (filter, Delete removes)
+- `Alt+B` buffer list (filter, Delete or Shift+Backspace removes)
 - `Alt+L` language list (filter)
 - `Alt+Z` toggle wrap
 - `Ctrl+/` toggle comment
 - `Alt+Up/Down` move line
 - `Tab` / `Shift+Tab` indent / outdent
-- `` Alt+` `` swap case of selection
 - `Ctrl+scroll` font size
 - `Alt+/` help
 
